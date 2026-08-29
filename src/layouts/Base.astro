@@ -1,0 +1,66 @@
+---
+import '../styles/global.css';
+import { ruta, vistaPrevia } from '../lib/agenda';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+}
+const { titulo, descripcion = 'Biología para secundaria, dos láminas nuevas cada mes.' } = Astro.props;
+
+const aqui = Astro.url.pathname;
+const enlaces = [
+  { texto: 'Inicio', href: ruta() },
+  { texto: 'Temario', href: ruta('temario') },
+  { texto: 'Cómo estudiar sola', href: ruta('como-estudiar') },
+];
+---
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo} · Láminas de Biología</title>
+    <meta name="description" content={descripcion} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
+
+    <header class="cabecera">
+      <div class="marco cabecera__fila">
+        <a class="cabecera__titulo" href={ruta()}>Láminas de <em>Biología</em></a>
+        <nav aria-label="Secciones">
+          <ul class="menu">
+            {enlaces.map((e) => (
+              <li>
+                <a href={e.href} aria-current={aqui === e.href ? 'page' : undefined}>{e.texto}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido" class="marco">
+      {vistaPrevia && (
+        <p class="aviso" style="margin-top:1.5rem">
+          <strong>Vista previa.</strong> Se están mostrando láminas que todavía no toca publicar.
+          El sitio publicado no las muestra.
+        </p>
+      )}
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="marco">
+        <p>Dos láminas nuevas cada mes, el día 1 y el día 15.</p>
+      </div>
+    </footer>
+  </body>
+</html>

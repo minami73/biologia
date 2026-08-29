@@ -1,0 +1,323 @@
+/* ------------------------------------------------------------------
+   Laminas de biologia — sistema visual
+   Referencia: las planchas litografiadas de los atlas de historia
+   natural y las etiquetas de los frascos de laboratorio.
+   Papel verde palido, tinta verde-negra, y un solo acento:
+   el violeta de genciana, el colorante con el que se tinen las
+   celulas para poder verlas. Solo se usa donde algo esta "tenido",
+   es decir, donde algo ya se revelo.
+------------------------------------------------------------------- */
+
+:root {
+  --papel: #f1f4ec;
+  --papel-hondo: #e2e8dc;
+  --tinta: #16241c;
+  --grafito: #5d6b5f;
+  --musgo: #3f7a55;
+  --genciana: #7b2d5e;
+
+  --display: 'Fraunces', Georgia, serif;
+  --texto: 'Literata', Georgia, serif;
+  --etiqueta: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --medida: 34rem;
+  --hilo: 1px solid color-mix(in srgb, var(--tinta) 18%, transparent);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--texto);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  font-optical-sizing: auto;
+}
+
+/* Trama de papel milimetrico, muy tenue. Solo en pantallas grandes. */
+@media (min-width: 60rem) {
+  body {
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--tinta) 4%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--tinta) 4%, transparent) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+  }
+}
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-variation-settings: 'SOFT' 40, 'WONK' 1;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--genciana); }
+
+:focus-visible {
+  outline: 2px solid var(--genciana);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- etiquetas de frasco --------------------------------------- */
+.etiqueta {
+  font-family: var(--etiqueta);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grafito);
+}
+
+/* --- estructura ------------------------------------------------- */
+.marco {
+  width: min(72rem, 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.saltar {
+  position: absolute;
+  left: -9999px;
+}
+.saltar:focus {
+  left: 1rem; top: 1rem;
+  position: fixed; z-index: 20;
+  background: var(--tinta); color: var(--papel);
+  padding: 0.5rem 0.9rem;
+}
+
+/* --- cabecera --------------------------------------------------- */
+.cabecera {
+  border-bottom: 2px solid var(--tinta);
+  padding-block: 1.1rem 0.9rem;
+}
+.cabecera__fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.cabecera__titulo {
+  font-family: var(--display);
+  font-variation-settings: 'SOFT' 60, 'WONK' 1;
+  font-size: 1.35rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cabecera__titulo em {
+  font-style: normal;
+  color: var(--genciana);
+}
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.menu a {
+  font-family: var(--etiqueta);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.menu a:hover { border-bottom-color: var(--genciana); }
+.menu a[aria-current='page'] {
+  border-bottom-color: var(--tinta);
+  color: var(--tinta);
+}
+
+/* --- portada ---------------------------------------------------- */
+.portada { padding-block: 3.5rem 2.5rem; }
+.portada__titulo {
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  font-variation-settings: 'SOFT' 80, 'WONK' 1;
+  max-width: 16ch;
+}
+.portada__bajada {
+  max-width: var(--medida);
+  margin-top: 1.25rem;
+  font-size: 1.15rem;
+  color: color-mix(in srgb, var(--tinta) 85%, var(--papel));
+}
+
+/* --- aviso de proxima lamina ------------------------------------ */
+.proxima {
+  margin-top: 2.5rem;
+  border-top: var(--hilo);
+  border-bottom: var(--hilo);
+  padding-block: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  align-items: baseline;
+}
+.proxima strong { font-weight: 600; }
+
+/* --- plancha de laminas ----------------------------------------- */
+.plancha {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 2px solid var(--tinta);
+}
+@media (min-width: 48rem) {
+  .plancha { grid-template-columns: repeat(2, 1fr); }
+  .plancha > li:nth-child(odd) {
+    border-right: var(--hilo);
+    padding-right: 1.75rem;
+  }
+  .plancha > li:nth-child(even) { padding-left: 1.75rem; }
+}
+
+.lamina {
+  border-bottom: var(--hilo);
+  padding-block: 1.5rem;
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  gap: 0 1rem;
+  align-items: start;
+}
+.lamina__folio {
+  font-family: var(--etiqueta);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--genciana);
+  font-variant-numeric: tabular-nums;
+}
+.lamina__unidad { display: block; margin-bottom: 0.35rem; }
+.lamina__titulo {
+  font-size: 1.4rem;
+  font-variation-settings: 'SOFT' 50, 'WONK' 1;
+}
+.lamina__titulo a { text-decoration: none; }
+.lamina__titulo a:hover { text-decoration: underline; text-decoration-color: var(--genciana); }
+.lamina__resumen {
+  margin: 0.5rem 0 0;
+  color: var(--grafito);
+  font-size: 0.95rem;
+  max-width: 44ch;
+}
+.lamina__pie {
+  margin-top: 0.7rem;
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+}
+
+/* Lamina que todavia no se revela: sin tenir, en contorno. */
+.lamina--pendiente { opacity: 0.55; }
+.lamina--pendiente .lamina__folio {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--grafito);
+}
+.lamina--pendiente .lamina__titulo { font-weight: 400; color: var(--grafito); }
+
+/* --- ficha de la lamina abierta --------------------------------- */
+.ficha {
+  border: 2px solid var(--tinta);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2.25rem;
+  display: grid;
+  gap: 0.75rem 2rem;
+}
+@media (min-width: 40rem) {
+  .ficha { grid-template-columns: repeat(3, auto); justify-content: start; }
+}
+.ficha__dato { display: grid; gap: 0.15rem; }
+.ficha__valor { font-family: var(--etiqueta); font-size: 0.9rem; }
+
+/* --- cuerpo de lectura ------------------------------------------ */
+.lectura {
+  max-width: var(--medida);
+  padding-block: 2.5rem 4rem;
+}
+.lectura h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-variation-settings: 'SOFT' 70, 'WONK' 1;
+  margin-bottom: 0.75rem;
+}
+.lectura h2 {
+  font-size: 1.5rem;
+  margin-top: 2.75rem;
+  margin-bottom: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: var(--hilo);
+}
+.lectura h3 {
+  font-size: 1.1rem;
+  font-family: var(--etiqueta);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
+}
+.lectura p, .lectura ul, .lectura ol { margin-block: 0 1.1rem; }
+.lectura ul, .lectura ol { padding-left: 1.2rem; }
+.lectura li { margin-bottom: 0.45rem; }
+.lectura strong { font-weight: 600; }
+
+/* Bloques con marca de color: solo lo que exige accion de ella. */
+.lectura blockquote {
+  margin: 1.5rem 0;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 3px solid var(--genciana);
+  color: color-mix(in srgb, var(--tinta) 88%, var(--papel));
+  font-style: normal;
+}
+.lectura blockquote p:last-child { margin-bottom: 0; }
+
+.lectura table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+.lectura th, .lectura td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: var(--hilo);
+}
+.lectura th { font-family: var(--etiqueta); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.lectura hr { border: 0; border-top: 2px solid var(--tinta); margin: 2.5rem 0; }
+
+/* --- navegacion entre laminas ----------------------------------- */
+.pasos {
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  gap: 1rem; border-top: 2px solid var(--tinta); padding-top: 1rem;
+  max-width: var(--medida);
+}
+.pasos a { font-family: var(--etiqueta); font-size: 0.78rem; text-decoration: none; }
+.pasos a:hover { text-decoration: underline; }
+
+/* --- pie -------------------------------------------------------- */
+.pie {
+  border-top: 2px solid var(--tinta);
+  padding-block: 1.5rem 3rem;
+  color: var(--grafito);
+  font-size: 0.85rem;
+}
+
+.aviso {
+  background: var(--papel-hondo);
+  border-left: 3px solid var(--grafito);
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lamina__titulo a { transition: text-decoration-color 150ms ease; }
+  .menu a { transition: border-color 150ms ease; }
+}

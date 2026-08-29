@@ -1,0 +1,57 @@
+name: Publicar láminas
+
+on:
+  # El disparador: 13:00 UTC = 7:00 a.m. en Teziutlán.
+  # Reconstruye el sitio el día 1 y el día 15 de cada mes; al reconstruir,
+  # las láminas cuya fecha ya llegó dejan de estar ocultas.
+  schedule:
+    - cron: '0 13 1 * *'
+    - cron: '0 13 15 * *'
+  # También publica cuando subes cambios a main.
+  push:
+    branches: [main]
+  # Y te deja publicar a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Avisar qué láminas faltan por escribir
+        run: npm run agendar -- --revisar
+
+      - run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

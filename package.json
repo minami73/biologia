@@ -1,0 +1,15 @@
+{
+  "name": "biologia-secundaria",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "preview-todo": "VISTA_PREVIA=true astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "agendar": "node scripts/agendar.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.13.0"
+  }
+}

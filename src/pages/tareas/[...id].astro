@@ -1,0 +1,55 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { publicadas, folio, fechaLarga, ruta } from '../../lib/agenda';
+
+export async function getStaticPaths() {
+  const abiertas = await publicadas();
+  return abiertas.map((tarea, i) => ({
+    params: { id: tarea.id },
+    props: {
+      tarea,
+      anterior: abiertas[i - 1] ?? null,
+      siguienteL: abiertas[i + 1] ?? null,
+    },
+  }));
+}
+
+const { tarea, anterior, siguienteL } = Astro.props;
+const { Content } = await render(tarea);
+const { numero, titulo, unidad, publicaEn, subtemas } = tarea.data;
+---
+<Base titulo={titulo} descripcion={tarea.data.resumen}>
+  <article class="lectura">
+    <div class="ficha">
+      <div class="ficha__dato">
+        <span class="etiqueta">Lámina</span>
+        <span class="ficha__valor">{folio(numero)} de 24</span>
+      </div>
+      <div class="ficha__dato">
+        <span class="etiqueta">Unidad</span>
+        <span class="ficha__valor">{unidad}</span>
+      </div>
+      <div class="ficha__dato">
+        <span class="etiqueta">Publicada</span>
+        <span class="ficha__valor">{fechaLarga(publicaEn)}</span>
+      </div>
+    </div>
+
+    <h1>{titulo}</h1>
+    {subtemas.length > 0 && (
+      <p class="etiqueta">{subtemas.join(' · ')}</p>
+    )}
+
+    <Content />
+
+    <nav class="pasos" style="margin-top:3rem">
+      {anterior
+        ? <a href={ruta(`tareas/${anterior.id}`)}>← {folio(anterior.data.numero)} {anterior.data.titulo}</a>
+        : <span></span>}
+      {siguienteL
+        ? <a href={ruta(`tareas/${siguienteL.id}`)}>{folio(siguienteL.data.numero)} {siguienteL.data.titulo} →</a>
+        : <a href={ruta('temario')}>Ver el temario completo →</a>}
+    </nav>
+  </article>
+</Base>

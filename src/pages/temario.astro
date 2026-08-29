@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Lamina from '../components/Lamina.astro';
+import { temario, yaSalio } from '../lib/agenda';
+
+const todas = await temario();
+const salidas = todas.filter(yaSalio).length;
+
+// Agrupadas por unidad, conservando el orden del temario.
+const unidades: { nombre: string; laminas: typeof todas }[] = [];
+for (const t of todas) {
+  const ultima = unidades.at(-1);
+  if (ultima && ultima.nombre === t.data.unidad) ultima.laminas.push(t);
+  else unidades.push({ nombre: t.data.unidad, laminas: [t] });
+}
+---
+<Base titulo="Temario">
+  <section class="portada">
+    <p class="etiqueta">Plancha completa</p>
+    <h1 class="portada__titulo">Temario</h1>
+    <p class="portada__bajada">
+      Las {salidas} láminas en color ya se pueden abrir. Las de contorno todavía no,
+      pero ahí está el título para que sepas hacia dónde va esto.
+    </p>
+  </section>
+
+  {unidades.map((u) => (
+    <section style="margin-bottom:3rem">
+      <p class="etiqueta" style="margin-bottom:0.75rem">{u.nombre}</p>
+      <ul class="plancha">
+        {u.laminas.map((t) => <li><Lamina tarea={t} /></li>)}
+      </ul>
+    </section>
+  ))}
+</Base>

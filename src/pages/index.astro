@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Lamina from '../components/Lamina.astro';
+import { publicadas, siguiente, temario, fechaLarga, diasFaltantes, folio } from '../lib/agenda';
+
+const todas = await temario();
+const abiertas = await publicadas();
+const recientes = [...abiertas].reverse().slice(0, 4);
+const proxima = await siguiente();
+---
+<Base titulo="Inicio">
+  <section class="portada">
+    <p class="etiqueta">Biología · Secundaria · {todas.length} láminas</p>
+    <h1 class="portada__titulo">Una lámina a la vez, hasta armar el atlas completo.</h1>
+    <p class="portada__bajada">
+      Cada lámina trae la teoría de un tema, una actividad para hacer con lo que tengas
+      en casa y preguntas que no vienen respondidas a propósito. Nadie te va a decir
+      cuándo abrirlas: se abren solas.
+    </p>
+
+    {proxima && (
+      <div class="proxima">
+        <span class="etiqueta">Siguiente</span>
+        <span>
+          <strong>Lámina {folio(proxima.data.numero)} — {proxima.data.titulo}</strong>
+        </span>
+        <span class="etiqueta">
+          {fechaLarga(proxima.data.publicaEn)} · faltan {diasFaltantes(proxima.data.publicaEn)} días
+        </span>
+      </div>
+    )}
+  </section>
+
+  <section>
+    <p class="etiqueta" style="margin-bottom:0.75rem">Lo último que salió</p>
+    {recientes.length === 0 ? (
+      <p class="aviso">Todavía no sale la primera lámina. Vuelve el día que toque.</p>
+    ) : (
+      <ul class="plancha">
+        {recientes.map((t) => <li><Lamina tarea={t} /></li>)}
+      </ul>
+    )}
+  </section>
+</Base>

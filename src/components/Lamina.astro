@@ -1,0 +1,27 @@
+---
+import { folio, fechaLarga, diasFaltantes, yaSalio, atrasada, ruta, type Tarea } from '../lib/agenda';
+
+interface Props { tarea: Tarea }
+const { tarea } = Astro.props;
+const { numero, titulo, unidad, resumen, publicaEn } = tarea.data;
+const salida = yaSalio(tarea);
+const pendienteDeEscribir = atrasada(tarea);
+const faltan = diasFaltantes(publicaEn);
+---
+<article class:list={['lamina', !salida && 'lamina--pendiente']}>
+  <p class="lamina__folio" aria-hidden="true">{folio(numero)}</p>
+  <div>
+    <span class="etiqueta lamina__unidad">Lámina {folio(numero)} · {unidad}</span>
+    <h2 class="lamina__titulo">
+      {salida ? <a href={ruta(`tareas/${tarea.id}`)}>{titulo}</a> : titulo}
+    </h2>
+    <p class="lamina__resumen">{resumen}</p>
+    <p class="lamina__pie etiqueta">
+      {salida && <span>Publicada el {fechaLarga(publicaEn)}</span>}
+      {pendienteDeEscribir && <span>En preparación</span>}
+      {!salida && !pendienteDeEscribir && (
+        <span>Sale el {fechaLarga(publicaEn)} · faltan {faltan} {faltan === 1 ? 'día' : 'días'}</span>
+      )}
+    </p>
+  </div>
+</article>
