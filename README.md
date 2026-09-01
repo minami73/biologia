@@ -55,8 +55,10 @@ El horario del cron está en `.github/workflows/publicar.yml`, en UTC.
 
 ## Escribir una lámina
 
-Copia la estructura de `01-que-es-estar-vivo.md`. Las secciones son siempre
-las mismas y el orden importa:
+El criterio completo (formato, temario maestro, ficha de contenido por tema y
+banco de actividades) vive en `docs/`, que es material interno y no se publica.
+Ver `docs/SPEC.md` antes de escribir. Resumen rápido: copia la estructura de
+`01-que-es-estar-vivo.md`. Las secciones son siempre las mismas y el orden importa:
 
 1. **Entrada** — una pregunta o un caso raro que descoloque un poco.
 2. **La teoría** — tres o cuatro subsecciones cortas.

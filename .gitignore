@@ -3,3 +3,6 @@ dist/
 .astro/
 .env
 .DS_Store
+
+# Libros de consulta (PDFs pesados, uso local para escribir las láminas).
+libros/

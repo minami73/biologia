@@ -7,7 +7,7 @@ subtemas:
   - "Características de los seres vivos"
   - "Niveles de organización"
   - "El caso raro de los virus"
-publicaEn: 2026-09-01
+publicaEn: 2026-08-31
 escrita: true
 ---
 
