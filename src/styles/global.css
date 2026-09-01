@@ -242,6 +242,9 @@ a:hover { text-decoration-color: var(--genciana); }
   max-width: var(--medida);
   padding-block: 2.5rem 4rem;
 }
+@media (min-width: 60rem) {
+  .lectura { --medida: 72rem; }
+}
 .lectura h1 {
   font-size: clamp(2rem, 6vw, 3rem);
   font-variation-settings: 'SOFT' 70, 'WONK' 1;
